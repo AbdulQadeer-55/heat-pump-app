@@ -1,0 +1,147 @@
+:root {
+    /* Color Palette */
+    --primary: #007f5f;       /* Professional Energy Green */
+    --primary-dark: #005f47;  /* Darker shade for hover/gradients */
+    --bg: #f4f7f6;            /* Light grey background */
+    --white: #ffffff;
+    --text: #2c3e50;          /* Dark blue-grey text */
+    --border: #e0e0e0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Main App Card */
+.app-container {
+    width: 100%;
+    max-width: 450px; /* Limits width on desktop */
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    overflow: hidden;
+    height: fit-content;
+}
+
+/* Header Section */
+header {
+    background: var(--primary);
+    color: white;
+    padding: 24px;
+    text-align: center;
+}
+
+header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+header p { margin: 5px 0 0; opacity: 0.9; font-size: 0.9rem; }
+
+/* Form Styles */
+form { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.input-group input, .input-group select {
+    width: 100%;
+    padding: 14px; /* Large touch target for mobile */
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 1rem;
+    box-sizing: border-box; 
+    background: #fdfdfd;
+    font-family: 'Inter', sans-serif;
+}
+
+.input-group input:focus, .input-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 127, 95, 0.1);
+}
+
+hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
+
+/* Button Styles */
+.calc-button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.1s, background 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 127, 95, 0.2);
+}
+
+.calc-button:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.calc-button:active { transform: translateY(1px); }
+
+/* Results Section Styles */
+.results-container {
+    padding: 24px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    animation: slideUp 0.4s ease-out; /* Smooth entrance animation */
+}
+
+.results-container h2 { 
+    margin-top: 0; 
+    text-align: center; 
+    font-size: 1.2rem; 
+    margin-bottom: 20px; 
+    color: var(--text); 
+}
+
+.result-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* The Green Highlight Card */
+.result-card.highlight {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 127, 95, 0.3);
+}
+
+.result-card .label { 
+    font-size: 0.8rem; 
+    opacity: 0.8; 
+    margin-bottom: 4px; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+}
+
+.result-card .value { font-size: 1.8rem; font-weight: 700; }
+.result-card .value.small { font-size: 1.2rem; color: var(--text); }
+.result-card.highlight .label { color: rgba(255,255,255,0.9); }
+
+/* Grid for smaller result cards */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+
+/* Chart Container */
+.chart-wrapper { position: relative; height: 160px; width: 100%; margin-bottom: 10px; }
+
+/* Animation Keyframes */
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
