@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#007f5f">
+    <meta name="description" content="Offline Calculator for Heat Pump Subsidy">
+    <title>Wärmepumpen Förderrechner</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>Förderrechner</h1>
+        <p>Wärmepumpe & Förderung berechnen</p>
+    </header>
+
+    <form id="calc-form">
+        <div class="input-group">
+            <label for="systemPrice">Anlagenpreis (€)</label>
+            <input type="number" id="systemPrice" placeholder="z.B. 49000" required>
+        </div>
+
+        <div class="input-group">
+            <label for="housingUnits">Wohneinheiten</label>
+            <input type="number" id="housingUnits" value="1" min="1" required>
+        </div>
+
+        <div class="input-group">
+            <label for="existingSystem">Bestandsanlage (Aktuell)</label>
+            <select id="existingSystem">
+                <option value="0.55">Öl (55%)</option>
+                <option value="0.70">Öl unter 40000€ (70%)</option>
+                <option value="0.35">Gas (35%)</option>
+                <option value="0.55">Gas Älter als 20 Jahre (55%)</option>
+                <option value="0.65">Gas unter 40000€ (65%)</option>
+                <option value="0.70">Gas unter 40000 und 20jahre (70%)</option>
+            </select>
+        </div>
+
+        <hr>
+
+        <div class="input-group">
+            <label for="heatingType">Heizungsart</label>
+            <select id="heatingType">
+                <option value="10">Öl in Liter</option>
+                <option value="10">Gas in m³</option>
+                <option value="5">Pellets in kg</option>
+                <option value="1800">Holz in rm</option> </select>
+        </div>
+
+        <div class="input-group">
+            <label for="consumption">Verbrauch (pro Jahr)</label>
+            <input type="number" id="consumption" placeholder="z.B. 3000" required>
+        </div>
+
+        <div class="input-group">
+            <label for="householdSize">Personen im Haushalt</label>
+            <select id="householdSize">
+                <option value="200l">1-2 Personen (200l)</option>
+                <option value="200l">3 Personen (200l)</option>
+                <option value="300l">4 Personen (300l)</option>
+                <option value="400l">5 bis 7 Personen (400l)</option>
+                <option value="500l">8 bis 12 Personen (500l)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="calc-button">Berechnen</button>
+    </form>
+
+    <div id="results-container" class="results-container" style="display: none;">
+        <h2>Ergebnisse</h2>
+        
+        <div class="result-card highlight">
+            <div class="label">Maximale Fördersumme</div>
+            <div class="value" id="res-subsidy">€0.00</div>
+        </div>
+
+        <div class="chart-wrapper">
+            <canvas id="subsidyChart"></canvas>
+        </div>
+
+        <div class="grid-2">
+            <div class="result-card">
+                <div class="label">Benötigte kW Größe</div>
+                <div class="value small" id="res-kw">-- KW</div>
+            </div>
+            <div class="result-card">
+                <div class="label">Warmwasserspeicher</div>
+                <div class="value small" id="res-water">-- l</div>
+            </div>
+        </div>
+        
+        <div class="result-card" style="margin-top: 10px; background: #f8f9fa;">
+            <div class="label">Berechnung Details</div>
+            <div class="value tiny" id="res-details" style="font-size: 0.8rem; color: #666; font-weight: 400;">--</div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker registered successfully'))
+                .catch(err => console.log('Service Worker registration failed', err));
+        });
+    }
+</script>
+</body>
+</html>
