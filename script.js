@@ -22,7 +22,6 @@ document.getElementById('calc-form').addEventListener('submit', function(e) {
     const consumption = parseFloat(document.getElementById('consumption').value);
     
     const waterStorageElement = document.getElementById('householdSize');
-    const waterStorageText = waterStorageElement.options[waterStorageElement.selectedIndex].text;
     const waterStorageValue = waterStorageElement.value; 
 
     const annualKwh = Math.round(consumption * multiplier);
@@ -55,12 +54,13 @@ document.getElementById('calc-form').addEventListener('submit', function(e) {
     document.getElementById('res-details').innerText = 
         `Limit: ${currencyFormatter.format(totalCap)} | Anrechenbar: ${currencyFormatter.format(eligibleCost)} * ${(subsidyFactor * 100).toFixed(0)}%`;
 
-    document.getElementById('results-container').style.display = 'block';
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.classList.add('active');
 
-    updateChart(finalSubsidy, totalCap, eligibleCost);
+    updateChart(finalSubsidy, totalCap);
 });
 
-function updateChart(subsidy, cap, eligible) {
+function updateChart(subsidy, cap) {
     const ctx = document.getElementById('subsidyChart').getContext('2d');
     
     if (myChart) {
@@ -75,10 +75,10 @@ function updateChart(subsidy, cap, eligible) {
                 label: 'Betrag in €',
                 data: [subsidy, cap],
                 backgroundColor: [
-                    '#007f5f',
-                    '#e0e0e0'
+                    '#4f46e5',
+                    '#e5e7eb'
                 ],
-                borderRadius: 4,
+                borderRadius: 6,
                 barPercentage: 0.6
             }]
         },
@@ -99,7 +99,8 @@ function updateChart(subsidy, cap, eligible) {
             scales: {
                 x: { 
                     beginAtZero: true,
-                    grid: { display: false }
+                    grid: { display: false },
+                    ticks: { display: false }
                 },
                 y: {
                     grid: { display: false }

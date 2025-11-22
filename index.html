@@ -168,18 +168,12 @@
     function closeResults() {
         const container = document.getElementById('results-container');
         container.classList.remove('active');
-        // Optional: Reset form? 
-        // document.getElementById('calc-form').reset();
     }
     
-    // Modify the original script listener to add the 'active' class
     const originalSubmit = document.getElementById('calc-form').onsubmit;
-    // We will handle the open animation in script.js via style display, 
-    // but let's override logic to use the class-based animation
 </script>
 
 <script>
-    // Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js');

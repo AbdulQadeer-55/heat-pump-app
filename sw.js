@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatpump-app-v1';
+const CACHE_NAME = 'heatpump-pro-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -6,7 +6,9 @@ const ASSETS_TO_CACHE = [
     './script.js',
     './manifest.json',
     'https://cdn.jsdelivr.net/npm/chart.js',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+    'https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css',
+    'https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.woff2',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap'
 ];
 
 self.addEventListener('install', (event) => {
