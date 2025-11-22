@@ -1,10 +1,9 @@
 :root {
-    /* Color Palette */
-    --primary: #007f5f;       /* Professional Energy Green */
-    --primary-dark: #005f47;  /* Darker shade for hover/gradients */
-    --bg: #f4f7f6;            /* Light grey background */
+    --primary: #007f5f;
+    --primary-dark: #005f47;
+    --bg: #f4f7f6;
     --white: #ffffff;
-    --text: #2c3e50;          /* Dark blue-grey text */
+    --text: #2c3e50;
     --border: #e0e0e0;
 }
 
@@ -18,10 +17,9 @@ body {
     min-height: 100vh;
 }
 
-/* Main App Card */
 .app-container {
     width: 100%;
-    max-width: 450px; /* Limits width on desktop */
+    max-width: 450px;
     background: var(--white);
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
@@ -29,7 +27,6 @@ body {
     height: fit-content;
 }
 
-/* Header Section */
 header {
     background: var(--primary);
     color: white;
@@ -40,7 +37,6 @@ header {
 header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
 header p { margin: 5px 0 0; opacity: 0.9; font-size: 0.9rem; }
 
-/* Form Styles */
 form { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
 
 .input-group label {
@@ -53,7 +49,7 @@ form { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
 
 .input-group input, .input-group select {
     width: 100%;
-    padding: 14px; /* Large touch target for mobile */
+    padding: 14px;
     border: 1px solid var(--border);
     border-radius: 10px;
     font-size: 1rem;
@@ -70,7 +66,6 @@ form { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
 
 hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
 
-/* Button Styles */
 .calc-button {
     background: var(--primary);
     color: white;
@@ -88,12 +83,11 @@ hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
 .calc-button:hover { background: var(--primary-dark); transform: translateY(-1px); }
 .calc-button:active { transform: translateY(1px); }
 
-/* Results Section Styles */
 .results-container {
     padding: 24px;
     background: #fff;
     border-top: 1px solid #eee;
-    animation: slideUp 0.4s ease-out; /* Smooth entrance animation */
+    animation: slideUp 0.4s ease-out;
 }
 
 .results-container h2 { 
@@ -113,7 +107,6 @@ hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-/* The Green Highlight Card */
 .result-card.highlight {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
@@ -134,13 +127,10 @@ hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
 .result-card .value.small { font-size: 1.2rem; color: var(--text); }
 .result-card.highlight .label { color: rgba(255,255,255,0.9); }
 
-/* Grid for smaller result cards */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
 
-/* Chart Container */
 .chart-wrapper { position: relative; height: 160px; width: 100%; margin-bottom: 10px; }
 
-/* Animation Keyframes */
 @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
