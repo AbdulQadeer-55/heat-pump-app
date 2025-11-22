@@ -2,119 +2,187 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#007f5f">
-    <meta name="description" content="Offline Calculator for Heat Pump Subsidy">
-    <title>Wärmepumpen Förderrechner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="Premium Subsidy Calculator">
+    <title>Wärmepumpen Profi-Rechner</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<div class="background-blob"></div>
+
 <div class="app-container">
     <header>
-        <h1>Förderrechner</h1>
-        <p>Wärmepumpe & Förderung berechnen</p>
+        <div class="header-content">
+            <div class="icon-wrapper">
+                <i class="ri-home-wifi-fill"></i>
+            </div>
+            <div class="text-content">
+                <h1>Förderrechner</h1>
+                <p>Wärmepumpen Check</p>
+            </div>
+        </div>
     </header>
 
     <form id="calc-form">
-        <div class="input-group">
-            <label for="systemPrice">Anlagenpreis (€)</label>
-            <input type="number" id="systemPrice" placeholder="z.B. 49000" required>
+        <div class="section-title">Gebäudedaten</div>
+        
+        <div class="grid-row">
+            <div class="input-group">
+                <label>Anlagenpreis (€)</label>
+                <div class="input-wrapper">
+                    <i class="ri-money-euro-circle-line"></i>
+                    <input type="number" id="systemPrice" placeholder="49.000" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Wohneinheiten</label>
+                <div class="input-wrapper">
+                    <i class="ri-building-2-line"></i>
+                    <input type="number" id="housingUnits" value="1" min="1" required>
+                </div>
+            </div>
         </div>
 
         <div class="input-group">
-            <label for="housingUnits">Wohneinheiten</label>
-            <input type="number" id="housingUnits" value="1" min="1" required>
+            <label>Bestandsanlage (Aktuell)</label>
+            <div class="input-wrapper">
+                <i class="ri-fire-line"></i>
+                <select id="existingSystem">
+                    <option value="0.55">Öl (55%)</option>
+                    <option value="0.70">Öl unter 40000€ (70%)</option>
+                    <option value="0.35">Gas (35%)</option>
+                    <option value="0.55">Gas >20 Jahre (55%)</option>
+                    <option value="0.65">Gas <40k (65%)</option>
+                    <option value="0.70">Gas <40k & >20 Jahre (70%)</option>
+                </select>
+                <i class="ri-arrow-down-s-line chevron"></i>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Verbrauchsanalyse</div>
+
+        <div class="input-group">
+            <label>Heizungsart</label>
+            <div class="input-wrapper">
+                <i class="ri-oil-line"></i>
+                <select id="heatingType">
+                    <option value="10">Öl in Liter</option>
+                    <option value="10">Gas in m³</option>
+                    <option value="5">Pellets in kg</option>
+                    <option value="1800">Holz in rm</option>
+                </select>
+                <i class="ri-arrow-down-s-line chevron"></i>
+            </div>
         </div>
 
         <div class="input-group">
-            <label for="existingSystem">Bestandsanlage (Aktuell)</label>
-            <select id="existingSystem">
-                <option value="0.55">Öl (55%)</option>
-                <option value="0.70">Öl unter 40000€ (70%)</option>
-                <option value="0.35">Gas (35%)</option>
-                <option value="0.55">Gas Älter als 20 Jahre (55%)</option>
-                <option value="0.65">Gas unter 40000€ (65%)</option>
-                <option value="0.70">Gas unter 40000 und 20jahre (70%)</option>
-            </select>
-        </div>
-
-        <hr>
-
-        <div class="input-group">
-            <label for="heatingType">Heizungsart</label>
-            <select id="heatingType">
-                <option value="10">Öl in Liter</option>
-                <option value="10">Gas in m³</option>
-                <option value="5">Pellets in kg</option>
-                <option value="1800">Holz in rm</option> </select>
+            <label>Verbrauch (pro Jahr)</label>
+            <div class="input-wrapper">
+                <i class="ri-dashboard-3-line"></i>
+                <input type="number" id="consumption" placeholder="3000" required>
+            </div>
         </div>
 
         <div class="input-group">
-            <label for="consumption">Verbrauch (pro Jahr)</label>
-            <input type="number" id="consumption" placeholder="z.B. 3000" required>
+            <label>Personen im Haushalt</label>
+            <div class="input-wrapper">
+                <i class="ri-group-line"></i>
+                <select id="householdSize">
+                    <option value="200l">1-2 Personen (200l)</option>
+                    <option value="200l">3 Personen (200l)</option>
+                    <option value="300l">4 Personen (300l)</option>
+                    <option value="400l">5 bis 7 Personen (400l)</option>
+                    <option value="500l">8 bis 12 Personen (500l)</option>
+                </select>
+                <i class="ri-arrow-down-s-line chevron"></i>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label for="householdSize">Personen im Haushalt</label>
-            <select id="householdSize">
-                <option value="200l">1-2 Personen (200l)</option>
-                <option value="200l">3 Personen (200l)</option>
-                <option value="300l">4 Personen (300l)</option>
-                <option value="400l">5 bis 7 Personen (400l)</option>
-                <option value="500l">8 bis 12 Personen (500l)</option>
-            </select>
-        </div>
-
-        <button type="submit" class="calc-button">Berechnen</button>
+        <button type="submit" class="calc-button">
+            <span>Jetzt Berechnen</span>
+            <i class="ri-arrow-right-line"></i>
+        </button>
     </form>
 
-    <div id="results-container" class="results-container" style="display: none;">
-        <h2>Ergebnisse</h2>
-        
-        <div class="result-card highlight">
-            <div class="label">Maximale Fördersumme</div>
-            <div class="value" id="res-subsidy">€0.00</div>
-        </div>
-
-        <div class="chart-wrapper">
-            <canvas id="subsidyChart"></canvas>
-        </div>
-
-        <div class="grid-2">
-            <div class="result-card">
-                <div class="label">Benötigte kW Größe</div>
-                <div class="value small" id="res-kw">-- KW</div>
-            </div>
-            <div class="result-card">
-                <div class="label">Warmwasserspeicher</div>
-                <div class="value small" id="res-water">-- l</div>
-            </div>
+    <div id="results-container" class="results-overlay">
+        <div class="results-header">
+            <h2>Analyse Ergebnis</h2>
+            <button class="close-btn" onclick="closeResults()"><i class="ri-close-line"></i></button>
         </div>
         
-        <div class="result-card" style="margin-top: 10px; background: #f8f9fa;">
-            <div class="label">Berechnung Details</div>
-            <div class="value tiny" id="res-details" style="font-size: 0.8rem; color: #666; font-weight: 400;">--</div>
+        <div class="results-content">
+            <div class="result-hero">
+                <div class="hero-label">Maximale Fördersumme</div>
+                <div class="hero-value" id="res-subsidy">€0.00</div>
+                <div class="hero-badge">Verifiziert</div>
+            </div>
+
+            <div class="chart-box">
+                <canvas id="subsidyChart"></canvas>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon-box blue"><i class="ri-flashlight-line"></i></div>
+                    <div class="stat-info">
+                        <span class="label">Leistung</span>
+                        <span class="value" id="res-kw">-- KW</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon-box orange"><i class="ri-drop-line"></i></div>
+                    <div class="stat-info">
+                        <span class="label">Speicher</span>
+                        <span class="value" id="res-water">-- l</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-details">
+                <i class="ri-information-line"></i>
+                <span id="res-details">Berechnung Details...</span>
+            </div>
+            
+            <button class="recalc-button" onclick="closeResults()">Neue Berechnung</button>
         </div>
     </div>
 </div>
 
 <script src="script.js"></script>
+<script>
+    function closeResults() {
+        const container = document.getElementById('results-container');
+        container.classList.remove('active');
+        // Optional: Reset form? 
+        // document.getElementById('calc-form').reset();
+    }
+    
+    // Modify the original script listener to add the 'active' class
+    const originalSubmit = document.getElementById('calc-form').onsubmit;
+    // We will handle the open animation in script.js via style display, 
+    // but let's override logic to use the class-based animation
+</script>
 
 <script>
+    // Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker registered successfully'))
-                .catch(err => console.log('Service Worker registration failed', err));
+            navigator.serviceWorker.register('./sw.js');
         });
     }
 </script>
