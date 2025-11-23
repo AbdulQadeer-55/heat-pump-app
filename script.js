@@ -16,7 +16,8 @@ document.getElementById('calc-form').addEventListener('submit', function(e) {
 
     const systemPrice = parseFloat(document.getElementById('systemPrice').value);
     const units = parseInt(document.getElementById('housingUnits').value);
-    const subsidyFactor = parseFloat(document.getElementById('existingSystem').value);
+    
+    const userFullFactor = parseFloat(document.getElementById('existingSystem').value);
     
     const multiplier = parseFloat(document.getElementById('heatingType').value);
     const consumption = parseFloat(document.getElementById('consumption').value);
@@ -34,13 +35,25 @@ document.getElementById('calc-form').addEventListener('submit', function(e) {
         }
     }
 
-    const baseCap = 30000;
-    const extraCap = (units - 1) * 15000;
-    const totalCap = baseCap + extraCap;
+    const pricePerUnit = systemPrice / units;
 
-    const eligibleCost = Math.min(systemPrice, totalCap);
+    const eligibleCostUnit1 = Math.min(pricePerUnit, 30000);
+    const subsidyUnit1 = eligibleCostUnit1 * userFullFactor;
 
-    const finalSubsidy = eligibleCost * subsidyFactor;
+    let subsidyExtraUnits = 0;
+    let eligibleCostExtra = 0;
+
+    if (units > 1) {
+        const extraUnitsCount = units - 1;
+        
+        const eligiblePerExtraUnit = Math.min(pricePerUnit, 15000);
+        
+        eligibleCostExtra = eligiblePerExtraUnit * extraUnitsCount;
+        
+        subsidyExtraUnits = eligibleCostExtra * 0.35;
+    }
+
+    const finalSubsidy = subsidyUnit1 + subsidyExtraUnits;
 
     const currencyFormatter = new Intl.NumberFormat('de-DE', { 
         style: 'currency', 
@@ -51,32 +64,40 @@ document.getElementById('calc-form').addEventListener('submit', function(e) {
     document.getElementById('res-kw').innerText = recommendedSize;
     document.getElementById('res-water').innerText = waterStorageValue;
 
-    document.getElementById('res-details').innerText = 
-        `Limit: ${currencyFormatter.format(totalCap)} | Anrechenbar: ${currencyFormatter.format(eligibleCost)} * ${(subsidyFactor * 100).toFixed(0)}%`;
+    let detailsText = `Einheit 1: ${currencyFormatter.format(eligibleCostUnit1)} (${(userFullFactor * 100).toFixed(0)}%)`;
+    
+    if (units > 1) {
+        detailsText += ` | Extras: ${currencyFormatter.format(eligibleCostExtra)} (35%)`;
+    }
+    
+    document.getElementById('res-details').innerText = detailsText;
 
     const resultsContainer = document.getElementById('results-container');
     resultsContainer.classList.add('active');
 
-    updateChart(finalSubsidy, totalCap);
+    updateChart(subsidyUnit1, subsidyExtraUnits);
 });
 
-function updateChart(subsidy, cap) {
+function updateChart(val1, val2) {
     const ctx = document.getElementById('subsidyChart').getContext('2d');
     
     if (myChart) {
         myChart.destroy();
     }
 
+    const labels = val2 > 0 ? ['Haupt-Einheit (1)', 'Zusatz-Einheiten'] : ['Haupt-Einheit (1)'];
+    const dataPoints = val2 > 0 ? [val1, val2] : [val1];
+
     myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'bar', 
         data: {
-            labels: ['Ihre Förderung', 'Max. Limit (Cap)'],
+            labels: labels,
             datasets: [{
-                label: 'Betrag in €',
-                data: [subsidy, cap],
+                label: 'Förderbetrag',
+                data: dataPoints,
                 backgroundColor: [
                     '#4f46e5',
-                    '#e5e7eb'
+                    '#06b6d4'
                 ],
                 borderRadius: 6,
                 barPercentage: 0.6
