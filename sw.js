@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatpump-pro-v2';
+const CACHE_NAME = 'heatpump-pro-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
