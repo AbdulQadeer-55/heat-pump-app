@@ -14,19 +14,18 @@ let myChart = null;
 document.getElementById('calc-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
+    // 1. INPUTS
     const systemPrice = parseFloat(document.getElementById('systemPrice').value);
     const units = parseInt(document.getElementById('housingUnits').value);
-    
-    const userFullFactor = parseFloat(document.getElementById('existingSystem').value);
-    
+    const userFullFactor = parseFloat(document.getElementById('existingSystem').value); // This is the 55% etc.
     const multiplier = parseFloat(document.getElementById('heatingType').value);
     const consumption = parseFloat(document.getElementById('consumption').value);
     
     const waterStorageElement = document.getElementById('householdSize');
     const waterStorageValue = waterStorageElement.value; 
 
+    // 2. HEAT PUMP SIZE CALCULATION (Unchanged)
     const annualKwh = Math.round(consumption * multiplier);
-
     let recommendedSize = "N/A";
     for (let i = 0; i < sizeLookup.length; i++) {
         if (annualKwh <= sizeLookup[i].limit) {
@@ -35,25 +34,46 @@ document.getElementById('calc-form').addEventListener('submit', function(e) {
         }
     }
 
-    const pricePerUnit = systemPrice / units;
+    // ---------------------------------------------------------
+    // 3. THE FIXED SUBSIDY LOGIC (Matches Excel Exactly)
+    // ---------------------------------------------------------
 
-    const eligibleCostUnit1 = Math.min(pricePerUnit, 30000);
-    const subsidyUnit1 = eligibleCostUnit1 * userFullFactor;
+    // Step A: Calculate the Total Cap (Limit) based on the lookup table
+    // Rule: Units 1-6 add 15,000 each. Units 7+ add 8,000 each.
+    let totalCap = 0;
+    
+    if (units <= 6) {
+        // Base 30,000 for first unit + 15,000 for each additional
+        totalCap = 30000 + ((units - 1) * 15000);
+    } else {
+        // Base 105,000 (for first 6 units) + 8,000 for each unit above 6
+        totalCap = 105000 + ((units - 6) * 8000);
+    }
 
+    // Step B: Determine the "Base Value Per Unit"
+    // Compare System Price vs Total Cap. Take the smaller one.
+    const eligibleTotal = Math.min(systemPrice, totalCap);
+    
+    // Divide the eligible total by the number of units to get the base value
+    const baseValuePerUnit = eligibleTotal / units;
+
+    // Step C: Calculate the Main Unit Subsidy (Unit 1)
+    // Unit 1 gets the user selected percentage (e.g. 55%)
+    const subsidyUnit1 = baseValuePerUnit * userFullFactor;
+
+    // Step D: Calculate Extra Units Subsidy (Units 2+)
+    // Extra units ALWAYS get 35% (0.35) regardless of the main factor
     let subsidyExtraUnits = 0;
-    let eligibleCostExtra = 0;
-
     if (units > 1) {
         const extraUnitsCount = units - 1;
-        
-        const eligiblePerExtraUnit = Math.min(pricePerUnit, 15000);
-        
-        eligibleCostExtra = eligiblePerExtraUnit * extraUnitsCount;
-        
-        subsidyExtraUnits = eligibleCostExtra * 0.35;
+        subsidyExtraUnits = baseValuePerUnit * extraUnitsCount * 0.35;
     }
 
     const finalSubsidy = subsidyUnit1 + subsidyExtraUnits;
+
+    // ---------------------------------------------------------
+    // 4. DISPLAY RESULTS
+    // ---------------------------------------------------------
 
     const currencyFormatter = new Intl.NumberFormat('de-DE', { 
         style: 'currency', 
@@ -64,10 +84,12 @@ document.getElementById('calc-form').addEventListener('submit', function(e) {
     document.getElementById('res-kw').innerText = recommendedSize;
     document.getElementById('res-water').innerText = waterStorageValue;
 
-    let detailsText = `Einheit 1: ${currencyFormatter.format(eligibleCostUnit1)} (${(userFullFactor * 100).toFixed(0)}%)`;
+    // Detail text
+    let detailsText = `Basiswert pro Einheit: ${currencyFormatter.format(baseValuePerUnit)}`;
+    detailsText += `\nEinheit 1: ${(userFullFactor * 100).toFixed(0)}%`;
     
     if (units > 1) {
-        detailsText += ` | Extras: ${currencyFormatter.format(eligibleCostExtra)} (35%)`;
+        detailsText += ` | Weitere Einheiten: 35%`;
     }
     
     document.getElementById('res-details').innerText = detailsText;
